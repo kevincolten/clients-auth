@@ -1,26 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Link } from "react-router-dom";
+import Login from './containers/Login';
+import Clients from './containers/Clients';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    loggedIn: !!localStorage.getItem('JWT_TOKEN')
+  }
+
+  logout = () => {
+    localStorage.clear();
+    this.setState({ loggedIn: false })
+    window.location.href = '/'
+  }
+
+  render = () => {
+    return (
+      <BrowserRouter>
+        <Link to="/login">Login</Link>
+        <br />
+        <Link to="/clients/">Clients</Link>
+        <br />
+        <a href="#" onClick={this.logout}>Logout</a>
+        <br/>
+
+        <Route exact path="/" component={this.state.loggedIn ? Clients : Login} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/clients/" component={Clients} />
+      </BrowserRouter>
+    );
+  }
+
 }
 
 export default App;
